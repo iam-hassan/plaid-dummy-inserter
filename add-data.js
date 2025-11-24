@@ -1,12 +1,11 @@
-const { createClient } = require('@supabase/supabase-js');
-const cron = require('node-cron');
+import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = 'https://xldyqqqzkrfjygikgdfl.supabase.co';
-const SUPABASE_SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsZHlxcXF6a3JmanlnaWtnZGZsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTQ3MTc5NiwiZXhwIjoyMDc3MDQ3Nzk2fQ.sT_ASkM6nfzSoM6N9VfHy6UwSwmSKYEuvY5-G9DhioA';
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-async function addDummyData() {
+export default async function handler(req, res) {
   const dummyRows = [];
   for (let i = 0; i < 9000; i++) {
     dummyRows.push({
@@ -34,23 +33,8 @@ async function addDummyData() {
     .insert(dummyRows);
 
   if (error) {
-    console.error('Insert error:', JSON.stringify(error, null, 2));
+    res.status(500).json({ error });
   } else {
-    console.log('Inserted:', data ? data.length : 0, 'rows');
+    res.status(200).json({ inserted: data ? data.length : 0 });
   }
 }
-
-// Schedule to run at 00:18, 04:00, 08:00, 12:00, 16:00 every day
-
-const times = ['30 0 * * *', '0 4 * * *', '0 8 * * *', '0 12 * * *', '0 16 * * *', '0 20 * * *', '0 22 * * *'];
-// Schedule to run at 00:18, 04:00, 08:00, 12:00, 16:00 every day
-
-times.forEach(cronTime => {
-  cron.schedule(cronTime, () => {
-    console.log(`Running addDummyData at ${new Date().toLocaleString()}`);
-    addDummyData();
-  });
-});
-
-// Optional: run immediately for testing
-// addDummyData();
