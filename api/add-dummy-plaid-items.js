@@ -33,7 +33,6 @@ export default async function handler(req, res) {
     const { data, error } = await supabase
       .from('plaid_items')
       .insert(dummyRows);
-    console.log("Data inserted bro");
     if (error) {
       return res.status(500).json({ error });
     }
