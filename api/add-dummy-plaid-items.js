@@ -5,7 +5,7 @@ const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 export default async function handler(req, res) {
-  const batchSize = 500; // Insert 500 rows per batch
+  const batchSize = 800; // Insert 500 rows per batch
   let totalInserted = 0;
   for (let batch = 0; batch < 18; batch++) { // 18*500=9000
     const dummyRows = [];
