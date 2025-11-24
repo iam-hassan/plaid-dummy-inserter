@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       created_at: new Date().toISOString()
     });
   }
-
+  console.log("Inerted the data")
   const { data, error } = await supabase
     .from('plaid_items')
     .insert(dummyRows);
